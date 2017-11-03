@@ -1,0 +1,23 @@
+{
+  "name": "solid-nodejs",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js",
+    "start": "node server.js"
+  },
+  "author": "bhuvin",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "inversify": "^2.0.0-rc.14",
+    "node-glassdoor": "^1.0.5",
+    "reflect-metadata": "^0.1.10",
+    "sentiment": "^4.1.0",
+    "twit": "^2.2.9",
+    "twit-promise": "^2.1.0"
+  },
+  "devDependencies": {},
+  "description": ""
+}

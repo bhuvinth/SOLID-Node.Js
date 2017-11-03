@@ -1,0 +1,438 @@
+<html>
+<head>
+  <style>
+    @import "http://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+    body {
+      font-family: "Open Sans";
+      margin: 6em 2em 2em 2em;
+    }
+    body:before {
+      content: '';
+      position: fixed;
+      top: 2%;
+      right: 3%;
+      height: 100px;
+      width: 100px;
+      background: url(http://www.html5rocks.com/static/images/identity/HTML5_Badge_128.png) no-repeat 50% 50%;
+      background-size: contain;
+      z-index: 10;
+      opacity: 0.1;
+    }
+    h1, h2, h3, h4 {
+      font-weight: 600;
+    }
+    h1 {
+      position: fixed;
+      background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+      background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+      background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+      background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+      width: 100%;
+      height: 80px;
+      padding: 10px 10px 10px 1em;
+      left: 0;
+      top: 0;
+      margin: 0;
+    }
+    h1 img {
+      height: 30px;
+      vertical-align: middle;
+      margin-bottom: 8px;
+    }
+    a { color: navy; }
+    
+    pre .str, code .str { color: #65B042; } /* string  - green */
+    pre .kwd, code .kwd { color: #E28964; } /* keyword - dark pink */
+    pre .com, code .com { color: #AEAEAE; font-style: italic; } /* comment - gray */
+    pre .typ, code .typ { color: #89bdff; } /* type - light blue */
+    pre .lit, code .lit { color: #3387CC; } /* literal - blue */
+    pre .pun, code .pun { color: #fff; } /* punctuation - white */
+    pre .pln, code .pln { color: #fff; } /* plaintext - white */
+    pre .tag, code .tag { color: #89bdff; } /* html/xml tag    - light blue */
+    pre .atn, code .atn { color: #bdb76b; } /* html/xml attribute name  - khaki */
+    pre .atv, code .atv { color: #65B042; } /* html/xml attribute value - green */
+    pre .dec, code .dec { color: #3387CC; } /* decimal - blue */
+
+    pre.prettyprint, code.prettyprint {
+      background-color: #000;
+      border-radius: 8px;
+    }
+
+    pre.prettyprint {
+      width: 95%;
+      margin: 1em auto;
+      padding: 1em;
+      white-space: pre-wrap;
+    }
+
+
+    /* Specify class=linenums on a pre to get line numbering */
+    ol.linenums { margin-top: 0; margin-bottom: 0; color: #AEAEAE; } /* IE indents via margin-left */
+    li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8 { list-style-type: none }
+
+    @media print {
+      pre .str, code .str { color: #060; }
+      pre .kwd, code .kwd { color: #006; font-weight: bold; }
+      pre .com, code .com { color: #600; font-style: italic; }
+      pre .typ, code .typ { color: #404; font-weight: bold; }
+      pre .lit, code .lit { color: #044; }
+      pre .pun, code .pun { color: #440; }
+      pre .pln, code .pln { color: #000; }
+      pre .tag, code .tag { color: #006; font-weight: bold; }
+      pre .atn, code .atn { color: #404; }
+      pre .atv, code .atv { color: #060; }
+      }
+  </style>
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+</head>
+<body>
+    <h1><img src="https://d1xwtr0qwr70yv.cloudfront.net/assets/tech/node-080a822911ecbc9f374324a29041a005.svg"> SOLID Principles in Node.js</h1>
+    
+    <h2>Please find the code structure as below: </h2>
+    <a href="https://ibb.co/faHDFw"><img src="https://preview.ibb.co/g8tnaw/System_structure.png" alt="System_structure" border="0"></a>
+  <div id="SRP">
+    <h2>S- Single Responsibility Principle.</h2>
+    <p>Single Responsibility Principle means that, each class should have a one single reason to change or to be responsible for.
+    </p>
+    <P>In the case of the Code, I have tried to demonstrate a layered structure, and each layer (and of course each class) has its own Responsibility, for e.g. 
+      <ul>
+        <li> <b>Routes (routeHandler.js):</b> It holds the responsibility of having the routes supported and calling the relevant
+           controller and methods for the given route.</li>
+        <li><b>Controller (SocialMediaController.js):</b> It holds the responsibilities like calling the Dependency injections, calling the relevant methods, and 
+          handling responses as per UI, rendering relevant views.
+        </li>
+        <li><b>Business Layer (SocialNetworkSearchManager.js, SocialNetworkSearchManager.js, SocialNetworkTrendsManager.js):</b> 
+          It holds the responsibilities like calling the relevant service implementations 
+          i.e. calling the relevant APIs of Twitter, Glassdoor etc. and is also responsible to contain the Business related 
+          modification to be done.
+        </li>
+        <li><b>Actual Service layer (GlassdoorSearchService.js, TwitterSearchService.js, TwitterTrendsService.js):</b> 
+          It holds the responsibilities like actually communicating with the relevant Social network API's, Creating the request, 
+          handling the response, errors etc.
+        </li>
+      </ul>
+
+    </P>
+  </div>
+
+  <div id="OCP">
+    <h2>O- Open Closed Principle.</h2>
+    <p>  This principle basically states that you should allow users to add new functionalities without changing existing code.
+    </p>
+    <p>In this implementation, I have attempted to demonstrate this principle by creating a base class for Twitter service which
+      supports Searching the Tweets for a given query string, but when a new functionality of getting the Trending topics on Twitter
+      a new class has been made TwitterTrendsService which extends the BaseTwitterService.
+      <br/>
+      Code for BaseTwitterService.js:
+      <pre class="prettyprint"><code> class BaseTwitterService
+          {
+              constructor()
+              {
+                  this.getInput = this.getInput.bind(this);
+                  this.getUrl = this.getUrl.bind(this);
+                  this.callTwitterSearchResult = this.callTwitterService.bind(this);
+              }
+              getInput(search_query)
+              {
+                 let params= {
+                     q :search_query
+                 }
+                 return params;
+              }
+          
+              getUrl()
+              {
+                  return config['TwitterSearchUrl'];
+              }
+          
+              async callTwitterService(query_string)
+              {
+                  let params=this.getInput(query_string);
+                  let url = this.getUrl();
+                  let result = await twitterObj.get(url,params);
+                  return result;
+              }
+          }</code></pre>
+
+          The code for TwitterTrendsService.js:
+         <pre class="prettyprint"> <code>
+              class TwitterTrendsApi extends baseTwitter
+              {
+                  getInput(search_query)
+                  {
+                     let params= {
+                          id :search_query
+                     };
+              
+                     return params;
+                  }
+              
+                  getUrl()
+                  {
+                      return config["TwitterTrendsUrl"];
+                  }
+              
+                  async callTwitterService(query_string)
+                  {
+                      let params=this.getInput(query_string);
+                      let url = this.getUrl();
+                      let result = await twitterObj.get(url,params);
+                      return result;
+                  }
+              
+                  async getTrends()
+                  {
+                      try
+                      {
+                          let woeid = 23424848;
+                          let result = await this.callTwitterService(woeid);
+                          
+                          console.log(result);
+                          return result;
+                      }
+                      catch(error)
+                      {
+                          return error
+                      }
+                      
+                  }
+              }
+          </code></pre>
+    </p>
+  </div>
+
+  <div id="LSP">
+    <h2>L- Liskov's Substitution Principle.</h2>
+    <p>  The best explanation for this is if you have a parent class and a child class, then the base class and child class can be used interchangeably without getting incorrect results.   
+    </p>
+    <p>In this implementation, I have attempted to demonstrate this principle by again extending the above example, 
+      Currently in the TwitterTrendsApi if suppose the Trends service hadn't overriden the callTwitterService function,
+      or had it been implemented in a wrong way i.e. for e.g.:
+      <br/>
+      <pre  class="prettyprint"><code>
+          class TwitterTrendsApi extends baseTwitter
+          {
+              
+             /* If this had been the case then it might be a outright Violation of the Liskov's
+              Substitution principle.*/
+              async CallTwitterService(queryString)
+              {
+                  throw "Not Implemented";
+              }
+              
+          }
+      </code></pre>
+      Hence, in this case the Base and the Child class is interchangeably usable, though the Usages then will be different.
+    </p>
+  </div>
+<div id="ISP">
+    <h2>I- Interface Segregation Principle.</h2>
+    <p>  JavaScript doesn't have interfaces so this principle doesn't apply as strictly as others. However, it's important and relevant even with JavaScript's lack of type system.
+        <br/>
+        ISP states that "Clients should not be forced to depend upon interfaces that they do not use." Interfaces are implicit contracts in JavaScript because of duck typing.
+    </p>
+    <p>Hence for demonstrating this principle, I have created a special use case of Twitter search based API wherein
+      we need to carry out the Sentimental analysis for the given query. But this implementation has been offered as
+      an additional Optional callback by SocialNetworkSearchManager, and hence offering the client to modify the output
+      in any possible way it would like. Please find the code demonstration for this purpose as below:
+
+      <br/>
+      This is service providing class which internally calls the relevant Service's implementation and accordingly calls the 
+      Callback provided by the Client so making the functionality optional.
+      <pre class="prettyprint"><code>
+          class SocialNetworkSearchManager
+          {
+              constructor(twitter)
+              {
+                  this.social_network_obj = twitter;
+              }
+          
+              async searchResults(query_string,dataFormattingOptionalCallback)
+              {
+                  let result = await this.social_network_obj.searchResults(query_string);
+                  if(!Utils.isError(result) &amp;&amp; dataFormattingOptionalCallback)
+                  {
+                      result = await dataFormattingOptionalCallback(result)
+                  }
+                   return result;
+              }
+          
+              
+          }
+      </code></pre>
+
+      <br/>
+      Client i.e. the Controller which also calls the SentimentAnalysisManager for carrying out the Sentiment Analysis as below:
+      <pre class="prettyprint"><code>
+          class SocialMediaController
+          {
+              constructor()
+              {
+                
+              }
+          
+              async getSocialNetworkSentiment(request, response)
+              {
+                  let query_string = request.params.queryString;
+          
+                  if(!query_string)
+                  {
+                      response.render('errorpage.html')
+                  }
+          
+                  let social_obj = BindingsDI.Kernel.get(BindingsDI.IocMapping.SocialNetworkSearchManager);
+          
+                  /* Interface Segregation principle.*/
+                  let result = await social_obj.searchResults(query_string, async (tweet_result)=>{
+                      console.log(tweet_result);
+                      let sentiment_obj=BindingsDI.Kernel.get(BindingsDI.IocMapping.SentimentAnalysisManager);
+                      let overall_score = 0;
+                      let sentiment_result=":-|";
+                      var textArray=[];
+                      tweet_result.data.statuses.forEach(function(element) {
+                          textArray.push(element.text);
+                      }, this);
+          
+                      overall_score = await sentiment_obj.getSentimentScore(textArray);
+          
+                      if(overall_score > 0)
+                      {
+                          sentiment_result= ":-D"
+                      }
+                      else if(overall_score &lt; 0)
+                      {
+                          sentiment_result = ":-("
+                      }
+                      
+                      return sentiment_result;
+                  });
+                  
+                  if(!Utils.isError(result))
+                  {
+                      response.send(result);
+                      return;
+                  }
+                  response.statusCode = 500;
+                  response.render('errorpage.html')
+              }
+              
+          }
+      </code></pre>
+
+      
+      Hence, in this case the Client is not being forced to use the addtional functionality of Sentimental Analysis.
+    </p>
+</div>
+
+<div id="DIP">
+    <h2>D- Dependency Inversion Principle.</h2>
+    <p>  This principle states two essential things:
+        <ol>
+       <li> High-level modules should not depend on low-level modules. Both should depend on abstractions.</li>
+       <li> Abstractions should not depend upon details. Details should depend on abstractions.</li>
+      </ol>
+    </p>
+    <p>We have couple of Dependencies in the code, like there are 2 Social network services which I have implemented i.e.
+       Twitter and Glassdoor interchangeably.
+
+      <br/>
+      I have used Inversify library for implementing the same, wherein we have specified the different dependency 
+      configurations. Please find the code related to Dependency Bindings as below:
+      <pre  class="prettyprint"><code>
+          var inversify = require("inversify");
+          require("reflect-metadata");
+          var BaseTwitterService = require('../Business Layer/Twitter/BaseTwitterService.js')
+          var TwitterSearchService = require("../Business Layer/Twitter/TwitterSearchService.js");
+          var TwitterTrendsService = require("../Business Layer/Twitter/TwitterTrendsService.js");
+          var GlassDoor = require("../Business Layer/Glassdoor/GlassdoorSearchService.js");
+          var SocialNetworkSearchManager = require("../Business Layer/SocialNetworkSearchManager.js");
+          var SocialNetworkTrendsManager = require("../Business Layer/SocialNetworkTrendsManager.js")
+          var SentimentAnalysisManager = require("../Business Layer/SentimentAnalysisManager.js");
+          
+          var TYPES = {
+              SocialNetworkSearchManager: "SocialNetworkSearchManager",
+              TwitterSearchService: "TwitterSearchService",
+              Glassdoor:"GlassDoor",
+              SocialNetworkTrendsManager:"SocialNetworkTrendsManager",
+              TwitterTrendsService:"TwitterTrendsService",
+              SentimentAnalysisManager:"SentimentAnalysisManager"
+          };
+          
+          // Declare as injectable and its dependencies
+          inversify.decorate(inversify.injectable(), SocialNetworkTrendsManager);
+          inversify.decorate(inversify.injectable(), SocialNetworkSearchManager);
+          inversify.decorate(inversify.injectable(), BaseTwitterService);
+          inversify.decorate(inversify.injectable(), TwitterSearchService);
+          inversify.decorate(inversify.injectable(), TwitterTrendsService);
+          inversify.decorate(inversify.injectable(), GlassDoor);
+          inversify.decorate(inversify.injectable(), SentimentAnalysisManager);
+          
+          
+          // Injecting the Dependencies as mentioned below:
+          inversify.decorate(inversify.inject(TYPES.TwitterSearchService), SocialNetworkSearchManager, 0);
+          
+          /*
+          The Searching from Twitter can be switched to Glassdoor as easily as by replacing the above line with the line with, the code block as below:
+          inversify.decorate(inversify.inject(TYPES.Glassdoor), SocialNetworkSearchManager, 0);
+          */
+          
+          inversify.decorate(inversify.inject(TYPES.TwitterTrendsService), SocialNetworkTrendsManager, 0);
+          // Declare bindings
+          var kernel = new inversify.Kernel();
+          kernel.bind(TYPES.TwitterSearchService).to(TwitterSearchService);
+          kernel.bind(TYPES.TwitterTrendsService).to(TwitterTrendsService);
+          kernel.bind(TYPES.Glassdoor).to(GlassDoor);
+          kernel.bind(TYPES.SocialNetworkSearchManager).to(SocialNetworkSearchManager);
+          kernel.bind(TYPES.SocialNetworkTrendsManager).to(SocialNetworkTrendsManager);
+          kernel.bind(TYPES.SentimentAnalysisManager).to(SentimentAnalysisManager);
+          
+          module.exports={
+              Kernel : kernel,
+              IocMapping : TYPES
+          };
+          
+          
+      </code></pre>
+
+      <br/>
+      In the Controller, using the BindingsDI.js, the Dependencies are resolved, and hence It implements the Dependency injection Principle
+      <pre class="prettyprint"><code>
+          const BindingsDI = require("../InversifyDI/BindingsDI.js");
+          const Utils = require("../utils.js")
+          class SocialMediaController
+          {
+              constructor()
+              {
+                
+              }
+          
+              async searchSocialNetwork(request, response)
+              {
+                  let query_string = request.params.queryString;
+          
+                  if(!query_string)
+                  {
+                      response.render('errorpage.html')
+                  }
+          
+                  let social_obj = BindingsDI.Kernel.get(BindingsDI.IocMapping.SocialNetworkSearchManager);
+                  let result = await social_obj.searchResults(query_string);
+                  
+                  if(!Utils.isError(result))
+                  {
+                      response.send(result);
+                      return;
+                  }
+                  response.statusCode = 500;
+                  response.render('errorpage.html')
+              }
+              
+          }
+      </code></pre>
+
+      
+      Hence, in this case the Client is not being forced to use the addtional functionality of Sentimental Analysis.
+    </p>
+</div>
+</body>
+</html>

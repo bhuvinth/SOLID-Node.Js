@@ -1,0 +1,18 @@
+{
+    "ListenPort":8088,
+    "TwitterSearchUrl":"search/tweets",
+    "TwitterTrendsUrl":"trends/place",
+    "TwitterApiSettings":{
+        "consumer_key": "YourKey",  
+        "consumer_secret": "YourKey",
+        "access_token": "YourKey",  
+        "access_token_secret": "YourKey",
+        "timeout_ms": 60000
+    },
+    "GlassDoorApiSettings":{
+        "partnerId": 000000,
+        "partnerKey": "YourKey"
+    }
+
+
+}
