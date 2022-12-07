@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "ejs": "^2.5.7",
-    "express": "^4.16.2",
+    "express": "^4.17.3",
     "inversify": "^2.0.0-rc.14",
     "node-glassdoor": "^1.0.5",
     "reflect-metadata": "^0.1.10",
